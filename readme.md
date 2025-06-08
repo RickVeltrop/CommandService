@@ -122,5 +122,5 @@ end)
 ## 📝 Notes
 
 * Commands are stored under `TextChatService.Commands`.
-* Commands can be invoked dynamically through `Command:Invoke()`
+* Commands can be invoked dynamically through `Command:Invoke()`   
  Be sure to pass in the required arguments defined in `:WithArgs`
