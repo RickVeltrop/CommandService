@@ -12,6 +12,7 @@ local StdPattern = '^(%S+)%s*(.*)'
 
 --// Functions
 local function ParseCommandArgs(TargetArgs:{ Args.Argument }, Source:TextSource, Text:string)
+	local Caller = plrs:GetPlayerByUserId(Source.UserId)
 	local Args = { }
 	
 	local Match = Text:match(StdPattern)
@@ -23,7 +24,7 @@ local function ParseCommandArgs(TargetArgs:{ Args.Argument }, Source:TextSource,
 		local Match = Text:match(Pattern)
 		
 		local Converted
-		local Succ,Err = pcall(function() Converted = Conversions[v.Type](Match) end)
+		local Succ,Err = pcall(function() Converted = Conversions[v.Type](Match, Caller) end)
 		
 		assert(Match, `Pattern match failed for argument {i}`)
 		assert(Succ, `Type conversion string->{v.Type} failed for argument #{i}`)

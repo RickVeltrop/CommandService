@@ -22,7 +22,8 @@ Static.Arguments = Arg
 Static.ArgTypes = {
 	string = 'string',
 	number = 'number',
-	Player = 'player'
+	Player = 'player',
+	Players = 'players'
 }
 
 Static.create = function()
