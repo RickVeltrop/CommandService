@@ -65,6 +65,7 @@ Static.loadModule = function(Module:ModuleScript)
 			:WithName(v.Name)
 			:WithAlias(v.Alias)
 			:WithArgs(v.Args)
+			:WithAccessRequirement(v.AccessRequirement)
 			:Finalize()
 		
 		Command.Invoked:Connect(v.Invoked)
