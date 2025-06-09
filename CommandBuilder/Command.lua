@@ -1,5 +1,6 @@
 --// Services
 local tcs = game:GetService('TextChatService')
+local rs = game:GetService('ReplicatedStorage')
 local plrs = game:GetService('Players')
 
 --// Modules
@@ -7,12 +8,14 @@ local Args = require('./Argument')
 local Conversions = require('./TypeConversions')
 
 --// Constants
+local Remote = script.Parent.Obj.Remote
+print('Remote: ', Remote)
+
 local QuotesPattern = '^"(.-)"%s*(.*)'
 local StdPattern = '^(%S+)%s*(.*)'
 
 --// Functions
-local function ParseCommandArgs(TargetArgs:{ Args.Argument }, Source:TextSource, Text:string)
-	local Caller = plrs:GetPlayerByUserId(Source.UserId)
+local function ParseCommandArgs(TargetArgs:{ Args.Argument }, Caller:Player, Text:string)
 	local Args = { }
 	
 	local Match = Text:match(StdPattern)
@@ -49,14 +52,20 @@ Static.new = function(CmdData)
 	Cmd.Name = CmdData.Name
 	Cmd.PrimaryAlias = CmdData.Prefix .. CmdData.Name
 	Cmd.SecondaryAlias = CmdData.Prefix .. CmdData.Alias
+	Cmd:SetAttribute('MinAccessLevel', CmdData.MinAccessLevel)
 	Cmd.Parent = tcs.Commands
 	
 	Cmd.Triggered:Connect(function(Source:TextSource, Text:string)
-		local FiredPlr = plrs:GetPlayerByUserId(Source.UserId)
+		local Caller = plrs:GetPlayerByUserId(Source.UserId)
+		local Access = Caller:GetAttribute('AccessLevel')
 		
-		local Parsed = ParseCommandArgs(CmdData.Args, Source, Text)
-		Bindable:Fire(FiredPlr, Parsed)
+		assert(Access >= CmdData.MinAccessLevel, `{Caller.Name} does not have sufficient access for {Cmd.Name}`)
+		
+		local Parsed = ParseCommandArgs(CmdData.Args, Caller, Text)
+		Bindable:Fire(Caller, Parsed)
 	end)
+	
+	Remote:FireAllClients()
 	
 	local self = setmetatable({ }, module)
 	

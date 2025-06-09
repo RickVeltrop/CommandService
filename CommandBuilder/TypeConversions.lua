@@ -2,7 +2,7 @@ local plrs = game:GetService('Players')
 
 local module = {}
 
-module.string = function(Str:string) return tonumber(Str) end
+module.string = function(Str:string) return tostring(Str) end
 module.number = function(Str:string) return tonumber(Str) end
 
 module.player = function(PartialName:string)
